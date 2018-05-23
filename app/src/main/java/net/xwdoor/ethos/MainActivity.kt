@@ -4,15 +4,15 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import net.xwdoor.basemodule.extension.hideSoftInput
+import net.xwdoor.basemodule.extension.showSoftInput
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.alignParentBottom
 import org.jetbrains.anko.alignParentLeft
@@ -21,7 +21,6 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.button
 import org.jetbrains.anko.editText
 import org.jetbrains.anko.info
-import org.jetbrains.anko.inputMethodManager
 import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.padding
@@ -135,32 +134,5 @@ class MainActivity : Activity(), AnkoLogger {
                         }
                     }
                 }
-    }
-
-    /**
-     * 开关软键盘
-     */
-    fun Context.toggleSoftInput() {
-        // 开关软键盘
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
-                InputMethodManager.HIDE_NOT_ALWAYS)
-    }
-
-    /**
-     * 显示软键盘
-     *
-     * @param view 能够获取焦点的且已经获取焦点的当前布局中的 view
-     */
-    fun Context.showSoftInput(view: View) {
-        inputMethodManager.showSoftInput(view, 0)
-    }
-
-    /**
-     * 隐藏软键盘
-     *
-     * @param view 当前布局中的任意 view
-     */
-    fun Context.hideSoftInput(view: View) {
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
