@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import net.xwdoor.basemodule.extension.hideSoftInput
 import net.xwdoor.basemodule.extension.showSoftInput
+import net.xwdoor.basemodule.extension.withAlpha
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.alignParentBottom
 import org.jetbrains.anko.alignParentLeft
@@ -27,6 +28,7 @@ import org.jetbrains.anko.padding
 import org.jetbrains.anko.relativeLayout
 import org.jetbrains.anko.scrollView
 import org.jetbrains.anko.sdk25.listeners.onClick
+import org.jetbrains.anko.textColor
 import org.jetbrains.anko.textView
 import org.jetbrains.anko.verticalLayout
 import org.jetbrains.anko.wrapContent
@@ -56,23 +58,27 @@ class MainActivity : Activity(), AnkoLogger {
 
             // todo: 之后采用 constraintLayout
             editMask = verticalLayout {
+                backgroundColor = Color.DKGRAY.withAlpha(0.6f)
+                padding = 40
                 relativeLayout {
-                    textView("取消").lparams(wrapContent, wrapContent) {
+                    textView("取消").buttonCancelStyle().lparams(wrapContent, wrapContent) {
                         alignParentLeft()
                     }.onClick { closeEditMask() }
 
-                    textView("完成").lparams {
+                    textView("完成").buttonOkStyle().lparams {
                         alignParentRight()
                     }.onClick { closeEditMask() }
                 }
 
                 editView = editText {
-                    padding = 15
                     gravity = Gravity.TOP
-                    backgroundColor = Color.GREEN
+                    backgroundColor = Color.TRANSPARENT
                     // 刚进入界面时不获取焦点
                     isFocusable = false
-                }.lparams(matchParent, 0, 1f)
+                    textSize = 20f
+                }.lparams(matchParent, 0, 1f) {
+                    topMargin = 20
+                }
 
                 // scrollView 是为 view 漂浮在软键盘上做准备
                 scrollView {
@@ -134,5 +140,21 @@ class MainActivity : Activity(), AnkoLogger {
                         }
                     }
                 }
+    }
+
+    fun TextView.buttonCancelStyle(): TextView {
+        textColor = Color.WHITE
+        return textStyle()
+    }
+
+    fun TextView.buttonOkStyle(): TextView {
+        textColor = Color.GREEN
+        return textStyle()
+    }
+
+    fun TextView.textStyle(): TextView {
+        textSize = 17f
+        gravity = Gravity.CENTER
+        return this
     }
 }
