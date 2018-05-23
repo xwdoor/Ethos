@@ -14,7 +14,9 @@ GIF 录制工具：「GIF Brewery 3」
 
 关注微信公众号获取更多信息：
 
-![微信公众号](wechat_qrcode.jpeg)
+<div align=center>
+<img src="wechat_qrcode.jpeg" width="300" alt="微信公众号"/>
+</div>
 
 
 1. [图片编辑器--向上弹出文字编辑框（遮罩）界面](https://mp.weixin.qq.com/s/N2XL6BWJmNvg3UgP39uJ8A)
