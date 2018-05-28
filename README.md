@@ -20,4 +20,4 @@ GIF 录制工具：「GIF Brewery 3」
 
 
 1. [图片编辑器--向上弹出文字编辑框（遮罩）界面](https://mp.weixin.qq.com/s/N2XL6BWJmNvg3UgP39uJ8A)
-2. 
+2. [图片编辑器--视图布局 View 悬浮在软键盘上](https://mp.weixin.qq.com/s/L1rBQGXfpJFvtPb_ljlu6w)
