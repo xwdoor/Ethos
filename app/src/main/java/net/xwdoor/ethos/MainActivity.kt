@@ -5,26 +5,33 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ScaleDrawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RadioButton
 import android.widget.TextView
 import net.xwdoor.basemodule.extension.hideSoftInput
 import net.xwdoor.basemodule.extension.showSoftInput
 import net.xwdoor.basemodule.extension.withAlpha
+import net.xwdoor.basemodule.view.MultiLineRadioGroup
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.alignParentBottom
 import org.jetbrains.anko.alignParentLeft
 import org.jetbrains.anko.alignParentRight
 import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.button
+import org.jetbrains.anko.checkBox
+import org.jetbrains.anko.custom.customView
 import org.jetbrains.anko.editText
 import org.jetbrains.anko.info
 import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.padding
+import org.jetbrains.anko.radioButton
 import org.jetbrains.anko.relativeLayout
 import org.jetbrains.anko.scrollView
 import org.jetbrains.anko.sdk25.listeners.onClick
@@ -59,7 +66,7 @@ class MainActivity : Activity(), AnkoLogger {
             // todo: 之后采用 constraintLayout
             editMask = verticalLayout {
                 backgroundColor = Color.DKGRAY.withAlpha(0.6f)
-                padding = 40
+                setPadding(40, 40, 40,0)
                 relativeLayout {
                     textView("取消").buttonCancelStyle().lparams(wrapContent, wrapContent) {
                         alignParentLeft()
@@ -83,7 +90,20 @@ class MainActivity : Activity(), AnkoLogger {
                 // scrollView 是为 view 漂浮在软键盘上做准备
                 scrollView {
                     linearLayout {
-                        textView("tool bar")
+                        checkBox()
+                        customView<MultiLineRadioGroup> {
+                            arrayOf(Color.WHITE, Color.BLACK, Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.parseColor("#800080")).forEach { color ->
+                                radioButton().colorSelectStyle(color).also {
+                                    // 默认选择白色
+                                    if (color == Color.WHITE) {
+                                        check(it.id)
+                                        editView.textColor = color
+                                    }
+                                }
+                            }
+                        }.setOnCheckedChangeListener { group, checkedId ->
+                            editView.textColor = group.findViewById<RadioButton>(checkedId).tag as Int
+                        }
                     }
                 }
 
@@ -156,5 +176,42 @@ class MainActivity : Activity(), AnkoLogger {
         textSize = 17f
         gravity = Gravity.CENTER
         return this
+    }
+
+    private fun RadioButton.colorSelectStyle(color: Int = Color.WHITE): RadioButton {
+        tag = color
+        buttonDrawable = null
+        background = radioSelector(35, color,8)
+        // 由于我们修改 buttonDrawable、background 的值，导致宽高发生变化
+        // 所以这里指定宽高，不写在布局参数 lparams 中，是由于 anko 的 bug:
+        // RadioGroup 布局下，默认使用的是 LinearLayout.LayoutParams，而不是 RadioGroup.LayoutParams
+        width = 70
+        height = 70
+        layoutParams = LinearLayout.LayoutParams(wrapContent, wrapContent).apply {
+            leftMargin = 40
+        }
+        return this
+    }
+
+    private fun radioSelector(radius: Int, bgColor: Int, borderWidth: Int): StateListDrawable {
+        return StateListDrawable().apply {
+            addState(intArrayOf(android.R.attr.state_checked), checkedDrawable(radius, bgColor, borderWidth, Color.WHITE))
+            addState(intArrayOf(),
+                    ScaleDrawable(
+                            checkedDrawable(radius, bgColor, borderWidth, Color.WHITE),
+                            Gravity.CENTER, 0.18f, 0.18f
+                    )
+            )
+        }
+    }
+
+    private fun checkedDrawable(radius: Int, bgColor: Int, width: Int, strokeColor: Int): GradientDrawable {
+        return GradientDrawable().apply {
+            cornerRadius = radius.toFloat()
+            setColor(bgColor)
+            setStroke(width, strokeColor)
+            // 设置 level，缩放效果才有效
+            level = 100
+        }
     }
 }
