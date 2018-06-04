@@ -89,22 +89,24 @@ class MainActivity : Activity(), AnkoLogger {
 
                 // scrollView 是为 view 漂浮在软键盘上做准备
                 scrollView {
-                    linearLayout {
+                    customView<MultiLineRadioGroup> {
                         checkBox()
-                        customView<MultiLineRadioGroup> {
-                            arrayOf(Color.WHITE, Color.BLACK, Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.parseColor("#800080")).forEach { color ->
-                                radioButton().colorSelectStyle(color).also {
-                                    // 默认选择白色
-                                    if (color == Color.WHITE) {
-                                        check(it.id)
-                                        editView.textColor = color
-                                    }
+                        arrayOf(Color.WHITE, Color.BLACK, Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.parseColor("#800080")).forEach { color ->
+                            radioButton().colorSelectStyle(color).also {
+                                // 默认选择白色
+                                if (color == Color.WHITE) {
+                                    check(it.id)
+                                    editView.textColor = color
                                 }
                             }
-                        }.setOnCheckedChangeListener { group, checkedId ->
-                            // 每次选择不同的颜色时，将文本设置为该颜色
-                            editView.textColor = group.findViewById<RadioButton>(checkedId).tag as Int
                         }
+
+                        lparams {
+                            bottomMargin = 30
+                        }
+                    }.setOnCheckedChangeListener { group, checkedId ->
+                        // 每次选择不同的颜色时，将文本设置为该颜色
+                        editView.textColor = group.findViewById<RadioButton>(checkedId).tag as Int
                     }
                 }
 
