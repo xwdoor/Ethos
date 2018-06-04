@@ -66,7 +66,7 @@ class MainActivity : Activity(), AnkoLogger {
             // todo: 之后采用 constraintLayout
             editMask = verticalLayout {
                 backgroundColor = Color.DKGRAY.withAlpha(0.6f)
-                setPadding(40, 40, 40,0)
+                setPadding(40, 40, 40, 0)
                 relativeLayout {
                     textView("取消").buttonCancelStyle().lparams(wrapContent, wrapContent) {
                         alignParentLeft()
@@ -102,6 +102,7 @@ class MainActivity : Activity(), AnkoLogger {
                                 }
                             }
                         }.setOnCheckedChangeListener { group, checkedId ->
+                            // 每次选择不同的颜色时，将文本设置为该颜色
                             editView.textColor = group.findViewById<RadioButton>(checkedId).tag as Int
                         }
                     }
@@ -179,9 +180,10 @@ class MainActivity : Activity(), AnkoLogger {
     }
 
     private fun RadioButton.colorSelectStyle(color: Int = Color.WHITE): RadioButton {
+        // 将颜色值存储到 tag 属性中，方便读取
         tag = color
         buttonDrawable = null
-        background = radioSelector(35, color,8)
+        background = radioSelector(35, color, 8)
         // 由于我们修改 buttonDrawable、background 的值，导致宽高发生变化
         // 所以这里指定宽高，不写在布局参数 lparams 中，是由于 anko 的 bug:
         // RadioGroup 布局下，默认使用的是 LinearLayout.LayoutParams，而不是 RadioGroup.LayoutParams
@@ -195,7 +197,9 @@ class MainActivity : Activity(), AnkoLogger {
 
     private fun radioSelector(radius: Int, bgColor: Int, borderWidth: Int): StateListDrawable {
         return StateListDrawable().apply {
+            // 如果选中（state_checked 属性为 true），就显示 checkedDrawable 效果
             addState(intArrayOf(android.R.attr.state_checked), checkedDrawable(radius, bgColor, borderWidth, Color.WHITE))
+            // else，就显示默认效果
             addState(intArrayOf(),
                     ScaleDrawable(
                             checkedDrawable(radius, bgColor, borderWidth, Color.WHITE),
@@ -207,8 +211,11 @@ class MainActivity : Activity(), AnkoLogger {
 
     private fun checkedDrawable(radius: Int, bgColor: Int, width: Int, strokeColor: Int): GradientDrawable {
         return GradientDrawable().apply {
+            // 设置半径
             cornerRadius = radius.toFloat()
+            // 设置背景颜色
             setColor(bgColor)
+            // 设置画笔宽度和画笔颜色
             setStroke(width, strokeColor)
             // 设置 level，缩放效果才有效
             level = 100
