@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.ScaleDrawable
@@ -14,6 +15,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import net.xwdoor.basemodule.extension.hideSoftInput
 import net.xwdoor.basemodule.extension.showSoftInput
@@ -31,6 +33,7 @@ import org.jetbrains.anko.editText
 import org.jetbrains.anko.info
 import org.jetbrains.anko.linearLayout
 import org.jetbrains.anko.matchParent
+import org.jetbrains.anko.padding
 import org.jetbrains.anko.radioButton
 import org.jetbrains.anko.relativeLayout
 import org.jetbrains.anko.scrollView
@@ -90,7 +93,26 @@ class MainActivity : Activity(), AnkoLogger {
                 // scrollView 是为 view 漂浮在软键盘上做准备
                 scrollView {
                     customView<MultiLineRadioGroup> {
-                        checkBox()
+                        checkBox {
+                            background = backgroundDrawable()
+                            width = 70
+                            height = 70
+                            padding = 0
+                            buttonDrawable = null
+                            gravity = Gravity.CENTER
+                            textSize = 18f
+                            text = "T"
+                            setTextColor(foregroundDrawable())
+                            setOnCheckedChangeListener { button, checked ->
+                                info("ttt, 选中啦：${button.text}")
+                            }
+                            // 如果用 lparams {}, 会使用 FrameLayout.LayoutParams 的布局类型，很奇怪
+                            // 是 customView 的问题
+                            // 所以要用布局参数的话，需要指明类型。但是下边的宽高设置无效
+                            layoutParams = RadioGroup.LayoutParams(70, 70).apply {
+                                leftMargin = 40
+                            }
+                        }
                         arrayOf(Color.WHITE, Color.BLACK, Color.RED, Color.YELLOW, Color.GREEN, Color.BLUE, Color.parseColor("#800080")).forEach { color ->
                             radioButton().colorSelectStyle(color).also {
                                 // 默认选择白色
@@ -221,6 +243,26 @@ class MainActivity : Activity(), AnkoLogger {
             setStroke(width, strokeColor)
             // 设置 level，缩放效果才有效
             level = 100
+        }
+    }
+
+    private fun foregroundDrawable(): ColorStateList {
+//        val states = Array(2) { IntArray(2) }
+        val states = arrayOfNulls<IntArray>(2)
+        states[0] = intArrayOf(android.R.attr.state_checked)
+        states[1] = intArrayOf()
+        return ColorStateList(states, intArrayOf(Color.BLACK, Color.WHITE))
+    }
+
+    private fun backgroundDrawable(): StateListDrawable {
+        return StateListDrawable().apply {
+            // 如果选中（state_checked 属性为 true），就显示 checkedDrawable 效果
+            addState(intArrayOf(android.R.attr.state_checked),
+                    checkedDrawable(8, Color.WHITE, 0, 0))
+            // else，就显示默认效果
+            addState(intArrayOf(),
+                    checkedDrawable(8, Color.TRANSPARENT, 5, Color.WHITE)
+            )
         }
     }
 }
