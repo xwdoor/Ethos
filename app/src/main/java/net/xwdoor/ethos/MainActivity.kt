@@ -221,19 +221,19 @@ class MainActivity : Activity(), AnkoLogger {
 
     private fun radioSelector(radius: Int, bgColor: Int, borderWidth: Int): StateListDrawable {
         return StateListDrawable().apply {
-            // 如果选中（state_checked 属性为 true），就显示 checkedDrawable 效果
-            addState(intArrayOf(android.R.attr.state_checked), checkedDrawable(radius, bgColor, borderWidth, Color.WHITE))
+            // 如果选中（state_checked 属性为 true），就显示 gradientDrawable 效果
+            addState(intArrayOf(android.R.attr.state_checked), gradientDrawable(radius, bgColor, borderWidth, Color.WHITE))
             // else，就显示默认效果
             addState(intArrayOf(),
                     ScaleDrawable(
-                            checkedDrawable(radius, bgColor, borderWidth, Color.WHITE),
+                            gradientDrawable(radius, bgColor, borderWidth, Color.WHITE),
                             Gravity.CENTER, 0.18f, 0.18f
                     )
             )
         }
     }
 
-    private fun checkedDrawable(radius: Int, bgColor: Int, width: Int, strokeColor: Int): GradientDrawable {
+    private fun gradientDrawable(radius: Int, bgColor: Int, width: Int, strokeColor: Int): GradientDrawable {
         return GradientDrawable().apply {
             // 设置半径
             cornerRadius = radius.toFloat()
@@ -256,12 +256,12 @@ class MainActivity : Activity(), AnkoLogger {
 
     private fun backgroundDrawable(): StateListDrawable {
         return StateListDrawable().apply {
-            // 如果选中（state_checked 属性为 true），就显示 checkedDrawable 效果
+            // 如果选中（state_checked 属性为 true），就显示 gradientDrawable 效果
             addState(intArrayOf(android.R.attr.state_checked),
-                    checkedDrawable(8, Color.WHITE, 0, 0))
+                    gradientDrawable(8, Color.WHITE, 0, 0))
             // else，就显示默认效果
             addState(intArrayOf(),
-                    checkedDrawable(8, Color.TRANSPARENT, 5, Color.WHITE)
+                    gradientDrawable(8, Color.TRANSPARENT, 5, Color.WHITE)
             )
         }
     }
